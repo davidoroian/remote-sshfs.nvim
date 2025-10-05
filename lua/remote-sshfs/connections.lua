@@ -12,6 +12,7 @@ local sshfs_args = {}
 local sshfs_job_id = nil
 local mount_point = nil
 local current_host = nil
+local original_dir = nil
 
 local M = {}
 
@@ -53,6 +54,8 @@ M.reload = function()
 end
 
 M.connect = function(host)
+  -- Store original directory
+  original_dir = vim.fn.getcwd()
   -- Initialize host variables
   local remote_host = host["Name"]
   if config.ui.confirm.connect then
@@ -304,7 +307,10 @@ M.unmount_host = function()
     if ok and ext.clear_cache then
       ext.clear_cache()
     end
-    utils.change_directory(vim.fn.expand("$HOME"))
+    if original_dir and vim.fn.isdirectory(original_dir) then
+      utils.change_directory(original_dir)
+      original_dir = nil
+    end
   end
 end
 
