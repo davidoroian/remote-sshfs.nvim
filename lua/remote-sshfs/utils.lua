@@ -151,7 +151,7 @@ M.change_directory = function(path)
   if not ok then
     vim.notify("Failed to change directory: " .. tostring(err), vim.log.levels.ERROR)
   else
-    vim.cmd("edit .")
+    vim.cmd "edit ."
     vim.notify("Directory changed to " .. path)
   end
 end

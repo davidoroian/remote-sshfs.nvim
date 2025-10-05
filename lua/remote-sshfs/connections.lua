@@ -299,17 +299,18 @@ M.unmount_host = function()
       -- Fallback to generic umount
       vim.fn.system { "umount", target }
     end
+    -- restore original directory
+    if original_dir and vim.fn.isdirectory(original_dir) then
+      utils.change_directory(original_dir)
+    end
     sshfs_job_id = nil
     mount_point = nil
     current_host = nil
+    original_dir = nil
     -- Clear Telescope extension cache for remote-find commands
     local ok, ext = pcall(require, "telescope._extensions.remote-sshfs")
     if ok and ext.clear_cache then
       ext.clear_cache()
-    end
-    if original_dir and vim.fn.isdirectory(original_dir) then
-      utils.change_directory(original_dir)
-      original_dir = nil
     end
   end
 end
